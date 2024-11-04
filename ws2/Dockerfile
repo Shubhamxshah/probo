@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./ 
+COPY ./ws2/package*.json ./ 
 
 RUN npm install
 RUN npm i -g nodemon
