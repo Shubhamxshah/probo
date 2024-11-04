@@ -3,7 +3,7 @@ import { Db_processor } from "./db_processor";
 
 async function main() {
   const db_processor = new Db_processor();
-  const redisClient = createClient();
+  const redisClient = createClient({url: `${process.env.REDIS_HOST}`});
   await redisClient.connect();
 
   while(true) {

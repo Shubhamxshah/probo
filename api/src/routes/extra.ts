@@ -5,6 +5,10 @@ import { GET_TRANSACTIONS } from "../types/toDb";
 
 export const extraRouter = Router();
 
+extraRouter.get("/", async(req, res) => {
+  res.send("helthy")
+})
+
 extraRouter.get("/balances/inr", async (req, res) => {
   const response = await RedisManager.getInstance().sendAndAwait({
       type: GET_INR_BALANCES

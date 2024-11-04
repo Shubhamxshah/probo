@@ -370,6 +370,11 @@ export class Engine {
       type: "sell",
     });
 
+    RedisManager.getInstance().publishMessage('publishes', {
+      EventId : stockSymbol,
+      EventData: this.ORDERBOOK[stockSymbol],
+    })
+
     const executedQuantity = 0;
     const sell: 'sell' = "sell";
 
@@ -529,6 +534,10 @@ export class Engine {
 
       // The funds for the remaining quantity are already locked, so no need to lock again
     }
+    RedisManager.getInstance().publishMessage('publishes', {
+      EventId : stockSymbol,
+      EventData: this.ORDERBOOK[stockSymbol],
+    })
 
     const executedQuantity = quantity - remainingQuantity;
     const buy: 'buy' = 'buy';

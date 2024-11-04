@@ -8,7 +8,7 @@ export class RedisManager {
   private static instance: RedisManager;
 
   constructor() {
-    this.client = createClient();
+    this.client = createClient({url: `${process.env.REDIS_HOST}`});
     this.client.connect();
   }
 
@@ -20,12 +20,10 @@ export class RedisManager {
   } 
 
   public sendToApi(clientId: string, message: MessagetoApi) {
-    console.log("2");
     this.client.publish(clientId, JSON.stringify(message));
   }
 
   public sendToDb(message: messageToDb_processor) {
-    console.log(`pushed message ${JSON.stringify(message)}`);
     this.client.lPush("MessageToDb_processor", JSON.stringify({clientId:123 ,message}));
   }
 

@@ -1,5 +1,5 @@
 import {WebSocket} from "ws";
-import {OutgoingMessage} from "./types/out";
+import {OutgoingMessage} from "./types/out"
 import { SubscriptionManager } from "./SubscriptionManager";
 import {IncomingMessage, SUBSCRIBE, UNSUBSCRIBE} from "./types/in";
 
