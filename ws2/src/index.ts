@@ -3,7 +3,7 @@ import WebSocket from "ws";
 import { Events, Users } from "./types/ws";
 import { createClient } from "redis";
 
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ port: 3002 });
 
 const users: Users = {};
 const event: Events = {};
@@ -93,5 +93,5 @@ function broadCastToEvent(EventId: string, message: any) {
 }
 
 startServer();
-console.log('Websocket server started at port 8080');
+console.log('Websocket server started at port 3002');
 
