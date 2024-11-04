@@ -55,8 +55,8 @@ jobs:
         env:
           PAT: ${{ secrets.PAT }}
         run: |
-          git clone https://github.com/code100x/staging-ops.git
-          cd staging-ops
+          git clone https://github.com/Shubhamxshah/ops.git
+          cd ops
           sed -i 's|image: shubhamxshah/api-bopro:.*|image: shubhamxshah/api-bopro:${{ github.sha }}|' probo/api-deployment.yml
           sed -i 's|image: shubhamxshah/engine-bopro:.*|image: shubhamxshah/engine-bopro:${{ github.sha }}|' probo/engine.yml
           sed -i 's|image: shubhamxshah/db-bopro:.*|image: shubhamxshah/db-bopro:${{ github.sha }}|' probo/db.yml
