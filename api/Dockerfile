@@ -1,13 +1,13 @@
 FROM node:20-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY ./api/package*.json ./ 
 
 RUN npm install -g npm 
 RUN npm i -g nodemon
 
-COPY . . 
+COPY ./api . 
 
 EXPOSE 3000
 

@@ -7,7 +7,7 @@ COPY ./ws2/package*.json ./
 RUN npm install
 RUN npm i -g nodemon
 
-COPY . .
+COPY ./ws2 .
 
 EXPOSE 3002
 

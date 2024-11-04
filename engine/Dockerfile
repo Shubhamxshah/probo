@@ -7,7 +7,7 @@ COPY ./engine/package*.json ./
 RUN npm install
 RUN npm i -g nodemon
 
-COPY . .
+COPY ./engine .
 
 CMD ["nodemon", "src/index.ts"]
 
