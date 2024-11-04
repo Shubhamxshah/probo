@@ -1,0 +1,69 @@
+name: Continuous Deployment
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push api
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./api/Dockerfile
+          push: true
+          tags: shubhamxshah/api-bopro:${{ github.sha }}
+
+      - name: Build and push engine
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./engine/Dockerfile
+          push: true
+          tags: shubhamxshah/engine-bopro:${{ github.sha }}
+          
+      - name: Build and push db
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./db/Dockerfile
+          push: true
+          tags: shubhamxshah/db-bopro:${{ github.sha }}
+          
+      - name: Build and push ws2
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./ws2/Dockerfile
+          push: true
+          tags: shubhamxshah/ws2-bopro:${{ github.sha }}
+
+      - name: Clone staging-ops repo, update, and push
+        env:
+          PAT: ${{ secrets.PAT }}
+        run: |
+          git clone https://github.com/code100x/staging-ops.git
+          cd staging-ops
+          sed -i 's|image: shubhamxshah/api-bopro:.*|image: shubhamxshah/api-bopro:${{ github.sha }}|' probo/api-deployment.yml
+          sed -i 's|image: shubhamxshah/engine-bopro:.*|image: shubhamxshah/engine-bopro:${{ github.sha }}|' probo/engine.yml
+          sed -i 's|image: shubhamxshah/db-bopro:.*|image: shubhamxshah/db-bopro:${{ github.sha }}|' probo/db.yml
+          sed -i 's|image: shubhamxshah/ws2-bopro:.*|image: shubhamxshah/ws2-bopro:${{ github.sha }}|' probo/ws2-deployment.yml
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add probo/api-deployment.yml probo/engine.yml probo/db.yml probo/ws2-deployment.yml
+          git commit -m "Updated images to ${{ github.sha }}"
+          git push https://${PAT}@github.com/Shubhamxshah/ops.git main
+
