@@ -9,7 +9,7 @@ RUN npm i -g nodemon
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3002
 
 CMD ["nodemon", "src/index.ts"]
 
