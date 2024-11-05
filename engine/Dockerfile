@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./engine/package*.json ./
 
 RUN npm install
-RUN npm i -g nodemon node-ts typescript --save-dev
+RUN npm i -g nodemon ts-node typescript --save-dev
 
 COPY ./engine .
 
