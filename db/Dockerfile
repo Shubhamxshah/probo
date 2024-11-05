@@ -6,7 +6,7 @@ COPY ./db/package*.json ./
 COPY ./db/prisma ./prisma
 
 RUN npm install
-RUN npm i -g nodemon
+RUN npm i -g nodemon node-ts typescript --save-dev
 RUN npx prisma generate
 
 COPY ./db .

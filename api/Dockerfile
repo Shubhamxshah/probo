@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY ./api/package*.json ./ 
 
-RUN npm install -g npm 
-RUN npm i -g nodemon
+RUN npm install 
+RUN npm i -g nodemon node-ts typescript --save-dev
 
 COPY ./api . 
 
