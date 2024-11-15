@@ -73,7 +73,7 @@ extraRouter.post("/symbol/create/:stockSymbol", async (req, res) => {
 
   res.json(response.payload);
 
-  await RedisManager.getInstance().sendToDb_processor({
+  RedisManager.getInstance().sendToDb_processor({
     type: CREATE_SYMBOL,
     data: {
       stockSymbol, 
@@ -95,6 +95,6 @@ extraRouter.get("/transactions", async (req, res) => {
     }
   })
 
-  res.json((response.payload));
+  res.json(response.payload);
 })
 

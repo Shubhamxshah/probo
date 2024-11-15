@@ -25,7 +25,108 @@ export class Engine {
   private INR_BALANCES: INRBalances = {};
 
   // add snapshot logic
-  constructor() {}
+constructor() {
+    let snapshot = null;
+
+    try {
+      if (process.env.WITH_SNAPSHOT) {
+        console.log("inside constructor");
+        const fileContent = fs.readFileSync("./src/trade/snapshot.json", "utf-8").trim();
+        console.log(fileContent); 
+        if (fileContent) {
+          snapshot = JSON.parse(fileContent); // Only parse if file is not empty
+        } else {
+          console.log("snapshot.json is empty, initializing with default values.");
+        }
+      }
+    } catch (e) {
+      console.log("Error reading or parsing snapshot:", e);
+    }
+
+    if (snapshot) {
+      // Initialize ORDERBOOK, STOCK_BALANCES, and INR_BALANCES with parsed data
+      this.ORDERBOOK = this.initializeOrderBook(snapshot.ORDERBOOK);
+      this.STOCK_BALANCES = this.initializeStockBalances(snapshot.STOCK_BALANCES);
+      this.INR_BALANCES = this.initializeInrBalances(snapshot.INR_BALANCES);
+    }
+
+    setInterval(() => {
+      this.saveSnapshot();
+    }, 3000);
+  }
+
+  // Helper methods to initialize each property
+  private initializeOrderBook(orderBookSnapshot: any): OrderBook {
+    const orderBook: OrderBook = {};
+    for (const symbol in orderBookSnapshot) {
+      const symbolData = orderBookSnapshot[symbol];
+      orderBook[symbol] = {
+        yes: {},
+        no: {}
+      };
+
+      for (const type of ["yes", "no"] as const) {
+        for (const price in symbolData[type]) {
+          const priceLevel = symbolData[type][price];
+          orderBook[symbol][type][price] = {
+            total: priceLevel.total,
+            orders: priceLevel.orders.map((order: any) => ({
+              quantity: order.quantity,
+              userId: order.userId,
+              type: order.type
+            }))
+          };
+        }
+      }
+    }
+    return orderBook;
+  }
+
+  private initializeStockBalances(stockBalancesSnapshot: any): StockBalances {
+    const stockBalances: StockBalances = {};
+    for (const userId in stockBalancesSnapshot) {
+      const userStocks = stockBalancesSnapshot[userId];
+      stockBalances[userId] = {};
+
+      for (const stockSymbol in userStocks) {
+        const stockPosition = userStocks[stockSymbol];
+        stockBalances[userId][stockSymbol] = {
+          yes: {
+            quantity: stockPosition.yes.quantity,
+            locked: stockPosition.yes.locked
+          },
+          no: {
+            quantity: stockPosition.no.quantity,
+            locked: stockPosition.no.locked
+          }
+        };
+      }
+    }
+    return stockBalances;
+  }
+
+  private initializeInrBalances(inrBalancesSnapshot: any): INRBalances {
+    const inrBalances: INRBalances = {};
+    for (const userId in inrBalancesSnapshot) {
+      const userBalance = inrBalancesSnapshot[userId];
+      inrBalances[userId] = {
+        balance: userBalance.balance,
+        locked: userBalance.locked
+      };
+    }
+    return inrBalances;
+  }
+
+  saveSnapshot() {
+    const snapshotData = {
+      ORDERBOOK: this.ORDERBOOK,
+      STOCK_BALANCES: this.STOCK_BALANCES,
+      INR_BALANCES: this.INR_BALANCES
+    };
+
+    fs.writeFileSync("./src/trade/snapshot.json", JSON.stringify(snapshotData, null, 2));
+    console.log(snapshotData);
+  }
 
   process({
     message,

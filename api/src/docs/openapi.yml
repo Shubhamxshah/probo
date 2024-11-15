@@ -1,0 +1,298 @@
+openapi: 3.0.0
+info:
+  title: Trading API
+  version: 1.0.0
+  description: API for managing users, balances, stock orders, and trades.
+
+paths:
+  /user/create/{userId}:
+    post:
+      summary: Create a new user with INR balances.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: User created successfully.
+        400:
+          description: User already exists.
+        500:
+          description: Internal server error.
+
+  /onramp/inr:
+    post:
+      summary: Add INR balance for a user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                amount:
+                  type: number
+                  minimum: 0
+      responses:
+        200:
+          description: INR balance updated successfully.
+        400:
+          description: Invalid input or user does not exist.
+
+  /balances/inr:
+    get:
+      summary: Get INR balances for all users.
+      responses:
+        200:
+          description: Returns INR balances for all users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INRBalances'
+
+  /balances/stock:
+    get:
+      summary: Get stock balances for all users.
+      responses:
+        200:
+          description: Returns stock balances for all users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockBalances'
+
+  /balances/inr/{userId}:
+    get:
+      summary: Get INR balance for a specific user.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns INR balance for a specific user.
+        400:
+          description: User does not exist.
+
+  /balances/stock/{userId}:
+    get:
+      summary: Get stock balance for a specific user.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns stock balance for a specific user.
+        404:
+          description: No stock balances found for user.
+
+  /orderbook:
+    get:
+      summary: Get full order book for all stocks.
+      responses:
+        200:
+          description: Returns order book for all stocks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderBook'
+
+  /orderbook/{stockSymbol}:
+    get:
+      summary: Get order book for a specific stock symbol.
+      parameters:
+        - in: path
+          name: stockSymbol
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns order book for a specific stock symbol.
+        404:
+          description: Order book not found for the symbol.
+
+  /symbol/create/{stockSymbol}:
+    post:
+      summary: Create a new stock symbol in the order book.
+      parameters:
+        - in: path
+          name: stockSymbol
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Symbol created successfully.
+        400:
+          description: Error creating symbol.
+
+  /trade/mint:
+    post:
+      summary: Mint tokens for a user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                stockSymbol:
+                  type: string
+                quantity:
+                  type: integer
+                  minimum: 1
+                price:
+                  type: integer
+                  minimum: 0
+      responses:
+        201:
+          description: Tokens minted successfully.
+        400:
+          description: Invalid input or insufficient balance.
+
+  /order/sell:
+    post:
+      summary: Place a sell order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequestBody'
+      responses:
+        200:
+          description: Sell order placed successfully.
+        400:
+          description: Invalid parameters or insufficient tokens.
+
+  /order/buy:
+    post:
+      summary: Place a buy order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequestBody'
+      responses:
+        200:
+          description: Buy order processed successfully.
+        400:
+          description: Invalid parameters or insufficient balance.
+
+  /reset:
+    post:
+      summary: Reset all balances and order book.
+      responses:
+        200:
+          description: All balances and order book reset.
+        500:
+          description: Error resetting data.
+
+components:
+  schemas:
+    Userbalance:
+      type: object
+      properties:
+        balance:
+          type: number
+        locked:
+          type: number
+
+    INRBalances:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Userbalance'
+
+    Order:
+      type: object
+      properties:
+        quantity:
+          type: number
+        userId:
+          type: string
+        type:
+          type: string
+          enum: [buy, sell]
+
+    PriceLevel:
+      type: object
+      properties:
+        total:
+          type: number
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+
+    TokenType:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/PriceLevel'
+
+    Symbol:
+      type: object
+      properties:
+        yes:
+          $ref: '#/components/schemas/TokenType'
+        no:
+          $ref: '#/components/schemas/TokenType'
+
+    OrderBook:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Symbol'
+
+    Quantity:
+      type: object
+      properties:
+        quantity:
+          type: number
+        locked:
+          type: number
+
+    StockPosition:
+      type: object
+      properties:
+        yes:
+          $ref: '#/components/schemas/Quantity'
+        no:
+          $ref: '#/components/schemas/Quantity'
+
+    StockName:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/StockPosition'
+
+    StockBalances:
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/StockName'
+
+    OrderRequestBody:
+      type: object
+      properties:
+        userId:
+          type: string
+        stockSymbol:
+          type: string
+        quantity:
+          type: number
+        price:
+          type: number
+        stockType:
+          type: string
+          enum: [yes, no]
+

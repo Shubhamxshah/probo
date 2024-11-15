@@ -1,6 +1,14 @@
-
 {
-  "orderbook" : {},
-  "STOCK_BALANCES" : {},
-  "USER_BALANCES": {}
+  "ORDERBOOK": {},
+  "STOCK_BALANCES": {},
+  "INR_BALANCES": {
+    "shubhamx8": {
+      "balance": 0,
+      "locked": 0
+    },
+    "shubhamx9": {
+      "balance": 0,
+      "locked": 0
+    }
+  }
 }

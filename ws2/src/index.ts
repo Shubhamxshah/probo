@@ -8,9 +8,7 @@ const wss = new WebSocketServer({ port: 3002 });
 const users: Users = {};
 const event: Events = {};
 
-const client = createClient({
-  url: `${process.env.REDIS_HOST}`
-});
+const client = createClient();
 
 let counter = 0;
 
