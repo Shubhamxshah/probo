@@ -3,7 +3,7 @@ import { Engine } from './trade/engine';
 
 async function main() {
   const engine = new Engine();
-  const redisClient = createClient();
+  const redisClient = createClient({url: `${process.env.REDIS_HOST}`});
   await redisClient.connect();
 
   while(true) {
