@@ -5,6 +5,7 @@ import LandingNavbar from "@/components/LandingNavbar"
 export default function Home() {
   return (
   <main>
+
     <LandingNavbar />
       <LandingHeader />
       <SecondHero /> 
