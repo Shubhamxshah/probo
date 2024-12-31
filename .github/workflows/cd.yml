@@ -51,6 +51,14 @@ jobs:
           push: true
           tags: shubhamxshah/ws2-bopro:${{ github.sha }}
 
+      - name: Build and push frontend
+        uses: docker/build-push-action@v4
+        with: 
+          context: .
+          file: ./frontend/Dockerfile
+          push: true
+          tags: shubhamxshah/frontend-bopro:${{ github.sha }}
+
       - name: Clone staging-ops repo, update, and push
         env:
           PAT: ${{ secrets.PAT }}
@@ -61,9 +69,10 @@ jobs:
           sed -i 's|image: shubhamxshah/engine-bopro:.*|image: shubhamxshah/engine-bopro:${{ github.sha }}|' probo/engine.yml
           sed -i 's|image: shubhamxshah/db-bopro:.*|image: shubhamxshah/db-bopro:${{ github.sha }}|' probo/db.yml
           sed -i 's|image: shubhamxshah/ws2-bopro:.*|image: shubhamxshah/ws2-bopro:${{ github.sha }}|' probo/ws2-deployment.yml
+          sed -i 's|image: shubhamxshah/frontend-bopro:.*|image: shubhamxshah/frontend-bopro:${{ github.sha }}|' probo/frontend.yml
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-          git add probo/api-deployment.yml probo/engine.yml probo/db.yml probo/ws2-deployment.yml
+          git add probo/api-deployment.yml probo/engine.yml probo/db.yml probo/ws2-deployment.yml probo/frontend.yml
           git commit -m "Updated images to ${{ github.sha }}"
           git push https://${PAT}@github.com/Shubhamxshah/ops.git main
 
