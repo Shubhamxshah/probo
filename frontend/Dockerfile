@@ -1,24 +1,27 @@
-# Use a stable Node.js version
-FROM node:20-alpine
+FROM node:20-slim AS base
 
-# Set the working directory inside the container
+FROM base AS dependencies
 WORKDIR /app
-
-# Copy the package files first for caching layer optimization
 COPY ./frontend/package*.json ./
+RUN npm install
 
-# Install dependencies
-RUN npm install --production
-
-# Copy the rest of the application code
+FROM base AS build 
+WORKDIR /app 
+COPY --from=dependencies /app/node_modules ./node_modules 
 COPY ./frontend .
+RUN npm run build 
 
-# Build the application for production
-RUN npm run build
+FROM base AS runner 
+WORKDIR /app 
 
-# Expose the port that the app will run on
-EXPOSE 3000
+ENV NODE_ENV = production \
+    NEXT_TELEMETRY_DISABLED = 1 \ 
+    HOSTNAME="0.0.0.0"
 
-# Start the application in production mode
-CMD ["npm", "start"]
+COPY --from=build /app/public ./public 
+RUN mkdir .next 
 
+COPY --from=build /app/.next/standalone ./ 
+COPY --from=build /app/.next/static ./.next/static 
+
+CMD ["node", "server.js"]
