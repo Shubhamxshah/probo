@@ -9,7 +9,7 @@ import { extraRouter } from './routes/extra';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 
-const port = 3000;
+const port = 3001;
 
 const app = express();
 const swaggerDocument = yaml.load("./src/docs/openapi.yml");
