@@ -125,7 +125,6 @@ constructor() {
     };
 
     fs.writeFileSync("./src/trade/snapshot.json", JSON.stringify(snapshotData, null, 2));
-    console.log(snapshotData);
   }
 
   process({
@@ -146,6 +145,7 @@ constructor() {
               simpleres,
             },
           });
+          console.log(`${userId} created`)
         } catch (e) {
           console.log(e);
         }
@@ -228,7 +228,6 @@ constructor() {
           const stockSymbol = message.data.stockSymbol;
           const stockType = message.data.stockType;
 
-          console.log("here1")
           const res = this.sellOrder(
             userId,
             price,
