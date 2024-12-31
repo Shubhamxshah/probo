@@ -14,7 +14,7 @@ userCreateRouter.post("/:userId", async (req, res) => {
     },
   });
   console.log(`created in memory`);
-  await RedisManager.getInstance().sendToDb_processor({
+  RedisManager.getInstance().sendToDb_processor({
     type: CREATE_USER,
     data: {
       userId,
