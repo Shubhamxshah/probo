@@ -1,6 +1,3 @@
-run api, engine etc from respective folders not from src as nodemon will track file changes and restart
-
-start engine with WITH_SNAPSHOT=true nodemon src/index.ts --ignore 'trade/snapshot.json'
 
 <a href="https://aimeos.org/">
     <img src="https://github.com/Shubhamxshah/probo/blob/main/frontend/public/probo.avif") alt="Aimeos logo" title="Aimeos" align="right" height="40" />
@@ -59,6 +56,9 @@ We're using github actions to make the ci/cd pipeline. Any changes to the codeba
 -> This makes the development fast and simple for developers to quickly push newer changes. If the newer code breaks the production, argocd reverts back to the previous state and notifies the failed state in production. It does not break the app. 
 
 ## Installation 
+
+run api, engine etc from respective folders not from src as nodemon will track file changes and restart
+start engine with WITH_SNAPSHOT=true nodemon src/index.ts --ignore 'trade/snapshot.json'
 
 ## Improvements 
 
