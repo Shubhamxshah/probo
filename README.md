@@ -15,7 +15,7 @@
     - [Api server](#api-server)
     - [engine](#engine)
     - [Websocket server](#WebSocket-server)
-    - [Devops pipeline](#DevOps-Pipleline)
+    - [Database archiver](#Db-archiver)
 - [DevOps Pipeline](#DevOps-Pipleline)
 - [Installation](#installation)
 - [Technologies](#Technologies)
@@ -27,7 +27,7 @@ Probo backend consists of an api-server, an engine, a websocket server and a dat
 
 ![probo-architecture](https://github.com/Shubhamxshah/probo/blob/main/frontend/public/probo-architecture.png)
 
-### api-server 
+### Api server 
 
 The api server defines routes in the backend but does not process them to increase security so that anyone couldnt access the underlying logic and its not exposed directly to the users for the risk of attacks. Its essential to provide api routes publicly so that big traders could write their own programs on top of it and hit the server without interacting with the frontend to do so, saving crucial time.
 
@@ -35,7 +35,7 @@ The api server defines routes in the backend but does not process them to increa
 
 This is where the main logic lies. Engine is a singleton class and a single instance of it runs in the kubernetes. This is essential to make the trades secure and coherent. Engine also generates and stores objects in memory, to execute trades faster as latency is crucial to keep minimal in stock trading applications. Hence this is a stateful application. It asynchronously sends the changes in the redis queue for the database archiver to pick up and store in the database and moves on to process the next request. 
 
-### WebSocket-server 
+### Websocket server 
 
 Websocket server sends updates of an event price based on live transactions to all the users connected in that event room. As soon as the user disconnects a particular room, it stops sending its updates. 
 
@@ -43,7 +43,7 @@ Websocket server sends updates of an event price based on live transactions to a
 
 Database archiver is a simple nodejs server with prisma initialised that picks up requests from the redis queue and processes them to store them in the database to keep the transactions secure. 
 
-## DevOps-Pipeline
+## DevOps Pipeline
 
 We're using github actions to make the ci/cd pipeline. Any changes to the codebase: 
 
