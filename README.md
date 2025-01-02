@@ -39,7 +39,7 @@ This is where the main logic lies. Engine is a singleton class and a single inst
 
 Websocket server sends updates of an event price based on live transactions to all the users connected in that event room. As soon as the user disconnects a particular room, it stops sending its updates. 
 
-### Database-archiver 
+### Database archiver 
 
 Database archiver is a simple nodejs server with prisma initialised that picks up requests from the redis queue and processes them to store them in the database to keep the transactions secure. 
 
