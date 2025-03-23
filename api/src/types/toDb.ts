@@ -13,8 +13,6 @@ export type MessageToDb_processor = {
   type: typeof CREATE_SYMBOL,
   data: {
     stockSymbol: string,
-    endTime: Date,
-    category: string,
   }
 } | {
   type: typeof GET_TRANSACTIONS,

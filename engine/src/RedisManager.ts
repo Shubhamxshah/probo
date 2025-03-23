@@ -8,7 +8,7 @@ export class RedisManager {
   private static instance: RedisManager;
 
   constructor() {
-    this.client = createClient({url: `${process.env.REDIS_HOST}`});
+    this.client = createClient({url: 'redis://redis:6379',});
     this.client.connect();
   }
 

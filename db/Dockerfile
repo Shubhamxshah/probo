@@ -1,15 +1,14 @@
-FROM node:20-alpine
+FROM node:20-alpine3.16
 
 WORKDIR /app
 
-COPY ./db/package*.json ./ 
-COPY ./db/prisma ./prisma
-
+COPY ./package*.json ./ 
 RUN npm install
 RUN npm i -g nodemon ts-node typescript --save-dev
+COPY ./prisma ./prisma
 RUN npx prisma generate
 
-COPY ./db .
+COPY . .
 
-CMD ["nodemon", "src/index.ts"]
+CMD ["sh", "-c", "npx prisma migrate deploy && nodemon src/index.ts"]
 

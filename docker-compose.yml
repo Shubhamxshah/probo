@@ -1,0 +1,86 @@
+services: 
+  postgresql: 
+    image: postgres
+    container_name: probo-pg
+    restart: always
+    environment: 
+      POSTGRES_USER: probo 
+      POSTGRES_PASSWORD: probopw
+      POSTGRES_DB: mydb
+    ports: 
+      - "5432:5432"
+    volumes:
+      - probo-pg:/var/lib/postgresql/data
+
+  redis: 
+    image: redis:latest
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  api: 
+    build:
+      context: ./api 
+      dockerfile: Dockerfile 
+    container_name: api 
+    depends_on: 
+      - postgresql
+      - redis 
+    ports:
+      - "3001:3001"
+    volumes: 
+      - ./api:/app
+      - /app/node_modules
+    command: npx nodemon src/index.ts
+  
+  db: 
+    build: 
+      context: ./db 
+      dockerfile: Dockerfile 
+    container_name: db 
+    depends_on: 
+      - postgresql
+      - redis 
+    environment:
+      DATABASE_URL: "postgresql://probo:probopw@probo-pg:5432/mydb?schema=public"
+    ports:
+      - "5555:5555"
+
+  engine: 
+    build: 
+      context: ./engine 
+      dockerfile: Dockerfile 
+    container_name: engine 
+    depends_on: 
+      - redis
+      - postgresql
+    environment:
+        WITH_SNAPSHOT: true
+
+  websocket: 
+    build: 
+      context: ./ws2 
+      dockerfile: Dockerfile 
+    container_name: websocket 
+    depends_on: 
+      - redis 
+      - postgresql 
+    ports: 
+      - "3002:3002"
+
+  # frontend: 
+  #   build: 
+  #     context: ./frontend 
+  #     dockerfile: Dockerfile 
+  #   container_name: frontend
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./frontend:/app 
+  #   command: pnpm start
+
+volumes: 
+  probo-pg:
+    
