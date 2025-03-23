@@ -29,7 +29,7 @@ const LandingNavbar = () => {
     if (username.trim()) {
       try {
         const response = await axios.post(
-          `http://localhost:3000/user/create/${username.trim()}`,
+          `http://localhost:3001/user/create/${username.trim()}`,
           {},
         );
 

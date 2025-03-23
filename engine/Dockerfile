@@ -2,14 +2,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY ./engine/package*.json ./
+COPY ./package*.json ./
 
 RUN npm install
 RUN npm i -g nodemon ts-node typescript --save-dev
 
-COPY ./engine .
+COPY . .
 
-CMD ["nodemon", "src/index.ts"]
+CMD ["npm", "start"]
 
 
 

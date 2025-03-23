@@ -61,8 +61,6 @@ extraRouter.get("/orderbook/:stockSymbol", async (req, res) => {
 
 extraRouter.post("/symbol/create/:stockSymbol", async (req, res) => {
   const stockSymbol = req.params.stockSymbol;
-  const endTime = req.body.endTime;
-  const category = req.body.category;
 
   const response = await RedisManager.getInstance().sendAndAwait({
     type: CREATE_SYMBOL,
@@ -77,8 +75,6 @@ extraRouter.post("/symbol/create/:stockSymbol", async (req, res) => {
     type: CREATE_SYMBOL,
     data: {
       stockSymbol, 
-      endTime,
-      category,
     }
   })
 

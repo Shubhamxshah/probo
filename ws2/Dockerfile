@@ -2,12 +2,12 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY ./ws2/package*.json ./ 
+COPY ./package*.json ./ 
 
 RUN npm install
 RUN npm i -g nodemon ts-node typescript --save-dev
 
-COPY ./ws2 .
+COPY . .
 
 EXPOSE 3002
 
