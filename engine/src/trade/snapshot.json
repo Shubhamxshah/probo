@@ -1,26 +1,5 @@
 {
   "ORDERBOOK": {},
   "STOCK_BALANCES": {},
-  "INR_BALANCES": {
-    "shubha01": {
-      "balance": 0,
-      "locked": 0
-    },
-    "shubha02": {
-      "balance": 0,
-      "locked": 0
-    },
-    "shubha04": {
-      "balance": 0,
-      "locked": 0
-    },
-    "shubha07": {
-      "balance": 0,
-      "locked": 0
-    },
-    "shubha08": {
-      "balance": 0,
-      "locked": 0
-    }
-  }
+  "INR_BALANCES": {}
 }

@@ -33,7 +33,7 @@ wss.on('connection', async function connection(ws: WebSocket, client: any) {
   
   ws.on('message', function message(message: string) {
     try {
-      const data = JSON.parse(message);
+      const data = JSON.parse(message.toString());
       const type: string = data.type;
       const params = data.params;
 

@@ -15,7 +15,6 @@ async function main() {
       db_processor.process(JSON.parse(response));
     }
   }
-
 }
 
 main();
