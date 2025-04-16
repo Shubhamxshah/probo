@@ -57,6 +57,8 @@ services:
       - postgresql
     environment:
         WITH_SNAPSHOT: true
+    volumes:
+      - ./src/trade/snapshot.json:/usr/src/app/src/trade/snapshot.json
 
   websocket: 
     build: 

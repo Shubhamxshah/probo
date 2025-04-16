@@ -41,7 +41,5 @@ model stockSymbol {
     id              String   @id @default(uuid())
 
     stockSymbol     String
-    endTime         DateTime
-    category        String
   }
 
